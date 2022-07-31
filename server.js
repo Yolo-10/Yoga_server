@@ -29,7 +29,7 @@ app.get('/',(request,response)=>{
 
 app.post('/addClass',(request,response)=>{
   let {c_name, time, place, p_limit,nm_money} = request.body;
-  let na_money = ((nm_money / p_limit) * 1.5).toFixed(2);
+  let na_money = ((nm_money / 5) * 1.5).toFixed(2);
   let sql = `insert into classes(c_name, time, place, p_limit,nm_money,na_money) values ("${c_name}", "${time}", "${place}", ${p_limit},"${nm_money}","${na_money}")`;
   
   connection.query(sql,function(err,res){
