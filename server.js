@@ -72,7 +72,9 @@ app.get('/getTodayClass',(request,response)=>{
 app.get('/getSignupUsers',(request,response)=>{
   let {c_id} = request.query;
   
-  let sql = `select * from signup where c_id =${c_id}`;
+  // let sql = `select * from signup where c_id =${c_id}`;
+  let sql=`select s.id,s.c_id,s.c_name,s.u_id,s.u_name,s.appo_time,s.cost,time
+  from signup as s left join def on s.u_id=def.u_id where s.c_id=${c_id}`;
 
   connection.query(sql,function(err,res){
     err? response.json({status:-1,message:"请求失败",err})
