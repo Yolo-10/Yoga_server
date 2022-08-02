@@ -36,8 +36,7 @@ app.get('/',(request,response)=>{
 
 app.post('/addClass',(request,response)=>{
   let {c_name, time, place, p_limit,nm_money} = request.body;
-  let na_money = ((nm_money / 5) * 1.5).toFixed(2);
-  let sql = `insert into classes(c_name, time, place, p_limit,nm_money,na_money) values ("${c_name}", "${time}", "${place}", ${p_limit},"${nm_money}","${na_money}")`;
+  let sql = `insert into classes(c_name, time, place, p_limit,nm_money) values ("${c_name}", "${time}", "${place}", ${p_limit},"${nm_money}")`;
   return dbOption(sql,response);
 })
 
@@ -63,7 +62,7 @@ app.get('/getSignupUsers',(request,response)=>{
   let {c_id} = request.query;
   
   // let sql = `select * from signup where c_id =${c_id}`;
-  let sql=`select s.id,s.c_id,s.c_name,s.u_id,s.u_name,s.appo_time,s.cost,time
+  let sql=`select s.id,s.c_id,s.c_name,s.u_id,s.u_name,s.appo_time,time
   from signup as s left join def on s.u_id=def.u_id where s.c_id=${c_id}`;
   return dbOption(sql,response);
 })
