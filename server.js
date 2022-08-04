@@ -5,6 +5,7 @@ const mysql = require("mysql");
 const bodyParser = require('body-parser'); //post请求参数解析需要
 const cors = require('cors');
 const path = require('path');
+const jwt = require('jsonwebtoken');
 
 
 const app = express();
@@ -20,6 +21,29 @@ connection.connect(err =>{
   if(err) console.log('连接失败');
   else console.log('连接成功')
 });
+
+//生成token
+const signToken = ({username,password})=>{
+  let token = jwt.sign(
+    {username,password},
+    "yoga_server",
+    {expiresIn:'1h'}
+  )
+  return token;
+}
+
+//鉴权
+const verifyToken = (req,res,next) =>{
+    let token = req.headers.yoga_token;
+    try{
+      jwt.verify(token,"yoga_server");
+      next();
+    }catch(err){
+      res.json({status:0,message:"token无效或登录已过期",err})
+      return;
+    }
+    next();
+}
 
 const dbOption = (sql,response)=>{
   connection.query(sql,function(err,res){
@@ -42,8 +66,12 @@ app.get('/login',(request,response)=>{
     if(err) response.json({status:-1,message:"登录失败",err});
     else{
       let realPwd =res[0].password;
-      realPwd !== password? response.json({status:-1,message:"请求失败",err:"密码错误"})
-      :response.json({status:0,message:"请求成功",data:res});
+      if(realPwd !== password){
+        response.json({status:-2,message:"密码错误",err:"密码错误"})
+      }else{
+        let token = signToken(u_id,realPwd);
+        response.json({status:0,message:"请求成功",data:token})
+      }
     }
   })
 })
@@ -74,8 +102,7 @@ app.get('/getTodayClass',(request,response)=>{
 
 app.get('/getSignupUsers',(request,response)=>{
   let {c_id} = request.query;
-  
-  // let sql = `select * from signup where c_id =${c_id}`;
+
   let sql=`select s.id,s.c_id,s.c_name,s.u_id,s.u_name,s.appo_time,time
   from signup as s left join def on s.u_id=def.u_id where s.c_id=${c_id}`;
   return dbOption(sql,response);
