@@ -34,6 +34,20 @@ app.get('/',(request,response)=>{
   response.render('/public/index.html');
 })
 
+app.get('/login',(request,response)=>{
+  let {u_id,password} = request.query;
+  let sql = `select password from users where u_id=${u_id}`;
+
+  connection.query(sql,function(err,res){
+    if(err) response.json({status:-1,message:"登录失败",err});
+    else{
+      let realPwd =res[0].password;
+      realPwd !== password? response.json({status:-1,message:"请求失败",err:"密码错误"})
+      :response.json({status:0,message:"请求成功",data:res});
+    }
+  })
+})
+
 app.post('/addClass',(request,response)=>{
   let {c_name, time, place, p_limit,nm_money} = request.body;
   let sql = `insert into classes(c_name, time, place, p_limit,nm_money) values ("${c_name}", "${time}", "${place}", ${p_limit},"${nm_money}")`;
