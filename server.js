@@ -58,7 +58,7 @@ app.get('/',(request,response)=>{
   response.render('/public/index.html');
 })
 
-app.get('/login',(request,response)=>{
+app.get('/userlogin',(request,response)=>{
   let {u_id,password} = request.query;
   let sql = `select password from users where u_id=${u_id}`;
 
