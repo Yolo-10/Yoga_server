@@ -6,6 +6,7 @@ const bodyParser = require('body-parser'); //post请求参数解析需要
 const cors = require('cors');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const { expressjwt: expressjwt } = require("express-jwt");
 
 
 const app = express();
@@ -14,7 +15,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 //连接数据库
-const config = require("./config.json");
+const config = require("./config");
 const { request, response } = require("express");
 var connection = mysql.createConnection(config);
 connection.connect(err =>{
@@ -34,7 +35,7 @@ const signToken = ({username,password})=>{
 
 //鉴权
 const verifyToken = (req,res,next) =>{
-    let token = req.headers.yoga_token;
+    let token = req.headers.Authorization;
     try{
       jwt.verify(token,"yoga_server");
       next();
@@ -57,6 +58,13 @@ app.use(express.static(path.join(__dirname,'/public')));
 app.get('/',(request,response)=>{
   response.render('/public/index.html');
 })
+
+app.use(
+  expressjwt({
+    secret: "yoga_server-secret",
+    algorithms: ["HS256"],
+  }).unless({ path: ["/userlogin","/getMonClass"] })
+);
 
 app.get('/userlogin',(request,response)=>{
   let {u_id,password} = request.query;
