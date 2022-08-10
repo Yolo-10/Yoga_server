@@ -12,17 +12,28 @@ const dbOption = (sql,response)=>{
 
 router.get('/getMonClass',(request,response)=>{
   let {Mon} = request.query;
-  let sql = `select * from classes where year(time) ="${Mon.substring(0,4)}" and month(time) ="${Mon.substring(6,7)}"`;
+  // let sql = `select * from classes where year(time) ="${Mon.substring(0,4)}" and month(time) ="${Mon.substring(6,7)}"`;
+  let sql = ` select c.*,t.num from classes as c left join 
+  ( (select c_id,count(id) as num from signup group by c_id)  as t ) on t.c_id=c.c_id 
+  where year(time) ="${Mon.substring(0,4)}" and month(time) ="${Mon.substring(6,7)}"`
   return dbOption(sql,response);
 })
 
-router.get('/getTodayClass',(request,response)=>{
+router.get('/getDayClass',(request,response)=>{
   let {Today} = request.query;
   let sql = `select * from classes where date_format(time,'%Y-%m-%d') = "${Today}"`;
   return dbOption(sql,response);
 })
 
-router.post('/addClass',verifyToken,(request,response)=>{
+router.get('/getMonSignupNum',(request,response)=>{
+  let {Mon} = request.query;
+  let sql = `select count(id) as cnt,DATE_FORMAT(appo_time, '%Y-%m-%d') as day from signup 
+  where DATE_FORMAT(appo_time, '%Y-%m') = "${Mon}"
+  group by day(appo_time);`;
+  return dbOption(sql,response);
+})
+
+router.post('/addClass',(request,response)=>{
   let {c_name, time, place, p_limit,nm_money} = request.body;
   let sql = `insert into classes(c_name, time, place, p_limit,nm_money) values ("${c_name}", "${time}", "${place}", ${p_limit},"${nm_money}")`;
   return dbOption(sql,response);

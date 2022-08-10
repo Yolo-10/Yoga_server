@@ -12,18 +12,22 @@ const login = require('./routes/login')
 const init = require('./routes/init')
 const dea = require('./routes/dea')
 
-//使用express-jwt这个中间件 排除路径为api/login
 // app.use(expressjwt({ 
 //   secret:secretKey, algorithms: ["HS256"] 
 // }).unless({path: [
-//   "/",
-//   "/login",
-//   "/umi.js",
-//   "/umi.css",
-//   // "/api/login",
-//   // "/api/init/getMonClass",
-//   // "/api/init/getTodayClass",
-//   // { url: /\/api\/dea(.*)/},
+//     "/",
+//     "/login",
+//     "/login/",
+//     "/umi.js",
+//     "/umi.css",
+//     "/static",
+//     "/static/sprite_normal.ef7a085b.svg",
+//     "/static/yoga.34127fd5.svg",
+//     "/favicon.ico",
+//   "/api/login",
+//   "/api/init/getMonClass",
+//   "/api/init/getDayClass",
+//   "api/init/getMonSignupNum",
 // ] })) 
 
 app.use(cors());  //允许跨域

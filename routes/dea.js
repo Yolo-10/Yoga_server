@@ -15,10 +15,20 @@ router.post('/addDefault',async(request,response)=>{
   return await dbOption(sql,response);
 })
 
+router.post('/signupClass',async(request,response)=>{
+  let {c_id, c_name, u_id, u_name,appo_time} = request.body;
+  let sql = `insert into signup (c_id, c_name, u_id, u_name,appo_time) values ("${c_id}", "${c_name}", "${u_id}", "${u_name}","${appo_time}")`;
+  return await dbOption(sql,response);
+})
+
+router.post('/delSignupClass',async(request,response)=>{
+  let {c_id, u_id} = request.body;
+  let sql = `delete from signup where c_id=${c_id} and u_id=${u_id}`;
+  return await dbOption(sql,response);
+})
 
 router.get('/getSignupUsers',async(request,response)=>{
   let {c_id} = request.query;
-
   let sql=`select s.id,s.c_id,s.c_name,s.u_id,s.u_name,s.appo_time,time
   from signup as s left join def on s.u_id=def.u_id where s.c_id=${c_id}`;
   return await dbOption(sql,response);
@@ -28,6 +38,12 @@ router.get('/getClassById',async(request,response)=>{
   let {c_id} = request.query;
   
   let sql = `select * from classes where c_id =${c_id}`;
+  return await dbOption(sql,response);
+})
+
+router.get('/getIsBlack',async(request,response)=>{
+  let {u_id} = request.query;
+  let sql = `select * from def where u_id =${u_id}`;
   return await dbOption(sql,response);
 })
 
