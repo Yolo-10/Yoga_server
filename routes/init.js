@@ -34,8 +34,8 @@ router.get('/getMonSignupNum',(request,response)=>{
 })
 
 router.post('/addClass',(request,response)=>{
-  let {c_name, time, place, p_limit,nm_money} = request.body;
-  let sql = `insert into classes(c_name, time, place, p_limit,nm_money) values ("${c_name}", "${time}", "${place}", ${p_limit},"${nm_money}")`;
+  let {c_name, time, place, p_limit} = request.body;
+  let sql = `insert into classes(c_name, time, place, p_limit) values ("${c_name}", "${time}", "${place}", ${p_limit})`;
   return dbOption(sql,response);
 })
 
