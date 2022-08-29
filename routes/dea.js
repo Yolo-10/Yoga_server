@@ -29,8 +29,18 @@ router.post('/delSignupClass',async(request,response)=>{
 
 router.get('/getSignupUsers',async(request,response)=>{
   let {c_id} = request.query;
-  let sql=`select s.id,s.c_id,s.c_name,s.u_id,s.u_name,s.appo_time,time
-  from signup as s left join def on s.u_id=def.u_id and s.c_id=def.c_id where s.c_id=${c_id}`;
+  let sql=`select a.*,b.times
+  from (
+    select s.id,s.c_id,s.c_name,s.u_id,s.u_name,s.appo_time,time 
+    from signup as s 
+    left join def 
+    on s.u_id=def.u_id and s.c_id=def.c_id 
+    where s.c_id=${c_id}
+  ) as a 
+  left join 
+    (select u_id,count(time) times from def group by u_id)
+    as b 
+  on a.u_id=b.u_id;`;
   return await dbOption(sql,response);
 })
 
@@ -41,12 +51,12 @@ router.get('/getClassById',async(request,response)=>{
   return await dbOption(sql,response);
 })
 
-router.get('/getIsBlack',async(request,response)=>{
+router.get('/getBlackTime',async(request,response)=>{
   let {u_id} = request.query;
   let sql = `select * from def where u_id =${u_id}`;
   connection.query(sql,await function(err,res){
     return err? response.json({status:-1,message:"请求失败",err})
-    :response.json({status:1,message:"请求成功",data:res.length>=2});
+    :response.json({status:1,message:"请求成功",data:res.length});
   })
 })
 
