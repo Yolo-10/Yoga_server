@@ -27,6 +27,12 @@ router.post('/delSignupClass',async(request,response)=>{
   return await dbOption(sql,response);
 })
 
+router.post('/delDef',async(request,response)=>{
+  let {c_id, u_id} = request.body;
+  let sql = `delete from def where c_id=${c_id} and u_id=${u_id}`;
+  return await dbOption(sql,response);
+})
+
 router.get('/getSignupUsers',async(request,response)=>{
   let {c_id} = request.query;
   let sql=`select a.*,b.times
