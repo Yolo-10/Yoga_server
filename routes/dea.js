@@ -18,18 +18,19 @@ router.post('/addDefault',async(request,response)=>{
 router.post('/signupClass',async(request,response)=>{
   let {c_id, c_name, u_id, u_name,appo_time} = request.body;
   let sql = `insert into signup (c_id, c_name, u_id, u_name,appo_time) values ("${c_id}", "${c_name}", "${u_id}", "${u_name}","${appo_time}")`;
+  console.log(u_id);
   return await dbOption(sql,response);
 })
 
 router.post('/delSignupClass',async(request,response)=>{
   let {c_id, u_id} = request.body;
-  let sql = `delete from signup where c_id=${c_id} and u_id=${u_id}`;
+  let sql = `delete from signup where c_id=${c_id} and u_id="${u_id}"`;
   return await dbOption(sql,response);
 })
 
 router.post('/delDef',async(request,response)=>{
   let {c_id, u_id} = request.body;
-  let sql = `delete from def where c_id=${c_id} and u_id=${u_id}`;
+  let sql = `delete from def where c_id=${c_id} and u_id="${u_id}"`;
   return await dbOption(sql,response);
 })
 
@@ -59,7 +60,7 @@ router.get('/getClassById',async(request,response)=>{
 
 router.get('/getBlackTime',async(request,response)=>{
   let {u_id} = request.query;
-  let sql = `select * from def where u_id =${u_id}`;
+  let sql = `select * from def where u_id ="${u_id}"`;
   connection.query(sql,await function(err,res){
     return err? response.json({status:-1,message:"请求失败",err})
     :response.json({status:1,message:"请求成功",data:res.length});

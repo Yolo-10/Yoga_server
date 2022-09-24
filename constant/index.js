@@ -4,7 +4,7 @@ module.exports = {
     port: 3306,
     user: 'root',
     pwd: '123456',
-    dbName: 'yoga_db',
+    dbName: 'yoga',
   },
   security: {
     secretKey: 'yoga_server', // 秘钥

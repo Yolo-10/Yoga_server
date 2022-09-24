@@ -5,7 +5,7 @@ const {generateToken} = require('../utils/token');
 
 router.get('/',(request,response)=>{
   let {u_id,password} = request.query;
-  let sql = `select * from users where u_id=${u_id}`;
+  let sql = `select * from users where u_id="${u_id}"`;
 
   connection.query(sql,function(err,res){
     if(err) response.json({status:-1,message:"登录失败",err});

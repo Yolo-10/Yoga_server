@@ -12,10 +12,11 @@ const dbOption = (sql,response)=>{
 
 router.get('/getMonClass',(request,response)=>{
   let {Mon} = request.query;
-  // let sql = `select * from classes where year(time) ="${Mon.substring(0,4)}" and month(time) ="${Mon.substring(6,7)}"`;
   let sql = ` select c.*,t.num from classes as c left join 
   ( (select c_id,count(id) as num from signup group by c_id)  as t ) on t.c_id=c.c_id 
-  where year(time) ="${Mon.substring(0,4)}" and month(time) ="${Mon.substring(6,7)}"`
+  where year(time) ="${Mon.substring(0,4)}" and month(time) ="${Mon.substring(5,7)}"`
+  
+  console.log(sql);
   return dbOption(sql,response);
 })
 
