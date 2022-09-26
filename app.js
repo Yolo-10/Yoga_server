@@ -5,6 +5,7 @@ const cors = require('cors');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 const { expressjwt } = require("express-jwt");
+var compression = require('compression')
 const { secretKey } = require('./constant/index').security;
 
 const app = express();
@@ -30,6 +31,8 @@ const dea = require('./routes/dea')
 //   "api/init/getMonSignupNum",
 // ] })) 
 
+//gzip打包
+app.use(compression());
 app.use(cors());  //允许跨域
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
