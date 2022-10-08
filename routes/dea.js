@@ -18,7 +18,6 @@ router.post('/addDefault',async(request,response)=>{
 router.post('/signupClass',async(request,response)=>{
   let {c_id, c_name, u_id, u_name,appo_time} = request.body;
   let sql = `insert into signup (c_id, c_name, u_id, u_name,appo_time) values ("${c_id}", "${c_name}", "${u_id}", "${u_name}","${appo_time}")`;
-  console.log(u_id);
   return await dbOption(sql,response);
 })
 

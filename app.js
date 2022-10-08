@@ -10,6 +10,7 @@ const { secretKey } = require('./constant/index').security;
 
 const app = express();
 const login = require('./routes/login')
+const register = require('./routes/register')
 const init = require('./routes/init')
 const dea = require('./routes/dea')
 
@@ -37,6 +38,7 @@ app.use(cors());  //允许跨域
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use('/api/login',login);
+app.use('/api/register',register);
 app.use('/api/init',init);
 app.use('/api/dea',dea);
 

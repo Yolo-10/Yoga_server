@@ -15,8 +15,6 @@ router.get('/getMonClass',(request,response)=>{
   let sql = ` select c.*,t.num from classes as c left join 
   ( (select c_id,count(id) as num from signup group by c_id)  as t ) on t.c_id=c.c_id 
   where year(time) ="${Mon.substring(0,4)}" and month(time) ="${Mon.substring(5,7)}"`
-  
-  console.log(sql);
   return dbOption(sql,response);
 })
 
