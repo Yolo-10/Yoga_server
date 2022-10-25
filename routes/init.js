@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const connection = require("../utils/db");
-const {verifyToken} = require('../utils/token');
 
 const dbOption = (sql,response)=>{
   connection.query(sql,function(err,res){
@@ -37,8 +36,6 @@ router.post('/addClass',(request,response)=>{
   let sql = `insert into classes(c_name, time, place, p_limit) values ("${c_name}", "${time}", "${place}", ${p_limit})`;
   return dbOption(sql,response);
 })
-
-
 
 
 module.exports = router;

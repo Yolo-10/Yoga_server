@@ -13,47 +13,40 @@ const login = require('./routes/login')
 const register = require('./routes/register')
 const init = require('./routes/init')
 const dea = require('./routes/dea')
-
-// app.use(expressjwt({ 
-//   secret:secretKey, algorithms: ["HS256"] 
-// }).unless({path: [
-//     "/",
-//     "/login",
-//     "/login/",
-//     "/umi.js",
-//     "/umi.css",
-//     "/static",
-//     "/static/sprite_normal.ef7a085b.svg",
-//     "/static/yoga.34127fd5.svg",
-//     "/favicon.ico",
-//   "/api/login",
-//   "/api/init/getMonClass",
-//   "/api/init/getDayClass",
-//   "api/init/getMonSignupNum",
-// ] })) 
-
 //gzip打包
 app.use(compression());
 app.use(cors());  //允许跨域
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+//静态资源
+app.use(express.static(path.join(__dirname,'/public')));
+app.get('/',(request,response)=>{
+  response.render('/public/index.html');
+})
+//jwt鉴权
+app.use(expressjwt({ 
+  secret:secretKey, algorithms: ["HS256"] 
+}).unless({path: [
+    "/",
+    "/login",
+    "/login/",
+    "/api/login",
+    "/api/init/getMonClass",
+    "/api/init/getDayClass",
+  // "/api/init[\\/]",
+  // "/api/init[\\/]",
+] })) 
+
 app.use('/api/login',login);
 app.use('/api/register',register);
 app.use('/api/init',init);
 app.use('/api/dea',dea);
 
-app.use(express.static(path.join(__dirname,'/public')));
-
-// app.use((err, req, res, next)=> {
-//   if(err.name == "UnauthorizedError"){
-//     res.status(401).send("登录信息失效，请重新登录");
-//   }else {
-//     next(err);
-//   }
-// });
-
-app.get('/',(request,response)=>{
-  response.render('/public/index.html');
+//错误处理
+app.use(function(err,req,res,next){
+  if(err){
+   throw err;
+  }
 })
 
 
