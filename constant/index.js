@@ -7,8 +7,7 @@ module.exports = {
     dbName: 'yoga_db',
   },
   security: {
-    secretKey: 'yoga_server', // 秘钥
+    secretKey: 'yoga2023', // 秘钥
     expiresIn: 60 * 24 * 7, // 令牌过期时间 60秒*24*7
-    // expiresIn:60,
   }
 };
