@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { callP, conn } = require("../utils/db");
 const { generateToken } = require('../utils/token');
-const { clone } = require('../utils/util')
+const { clone, auth } = require('../utils/util')
 
 router.get('/login', (req, res) => {
   let { u_id, password } = req.query;
@@ -36,12 +36,6 @@ router.post('/register', (req, res) => {
   })
 })
 
-router.post('/addClass', (req, res) => {
-  let {c_name, time, place, p_limit} = req.body;
-  let sql = `insert into classes(c_name, time, place, p_limit) values ("${c_name}", "${time}", "${place}", ${p_limit})`;
-  callP(sql, res);
-})
-
 router.get('/getMonClass', (req, res) => {
   let { Mon } = req.query;
   let sql = `select c.*,t.num from classes as c left join 
@@ -58,41 +52,39 @@ router.get('/getDayClass', (req, res) => {
   callP(sql,res);
 })
 
-router.post('/addDefault', (req,res)=>{
+router.post('/addClass', auth, (req, res) => {
+  let {c_name, time, place, p_limit} = req.body;
+  let sql = `insert into classes(c_name, time, place, p_limit) values ("${c_name}", "${time}", "${place}", ${p_limit})`;
+  callP(sql, res);
+})
+
+router.post('/addDefault', auth, (req,res)=>{
   let { u_id, u_name, c_id, time } = req.body;
   let sql = `insert into def (u_id, u_name, c_id, time) 
   values ("${u_id}", "${u_name}", "${c_id}", "${time}")`;
   callP(sql,res);
 })
 
-router.post('/delDef', (req,res)=>{
+router.post('/delDef', auth, (req,res)=>{
   let { c_id, u_id } = req.body;
   let sql = `delete from def where c_id=${c_id} and u_id="${u_id}"`;
   callP(sql,res);
 })
 
-router.get('/getMonSignupNum', (req, res) => {
-  let {Mon} = req.query;
-  let sql = `select count(id) as cnt,DATE_FORMAT(appo_time, '%Y-%m-%d') as day from signup 
-  where DATE_FORMAT(appo_time, '%Y-%m') = "${Mon}"
-  group by day(appo_time);`;
-  callP(sql, res);
-})
-
-router.post('/signupClass', (req, res) => {
+router.post('/signupClass', auth, (req, res) => {
   let { c_id, c_name, u_id, u_name, appo_time } = req.body;
   let sql = `insert into signup (c_id, c_name, u_id, u_name,appo_time) 
   values ("${c_id}", "${c_name}", "${u_id}", "${u_name}","${appo_time}")`;
   callP(sql, res);
 })
 
-router.post('/delSignupClass', (req, res) => {
+router.post('/delSignupClass', auth, (req, res) => {
   let { c_id, u_id } = req.body;
   let sql = `delete from signup where c_id=${c_id} and u_id="${u_id}"`;
   callP(sql, res);
 })
 
-router.get('/getSignupUsers', (req, res) => {
+router.get('/getSignupUsers', auth, (req, res) => {
   let { c_id } = req.query;
   let sql=`select a.*,b.times from (
     select s.id,s.c_id,s.c_name,s.u_id,s.u_name,s.appo_time,time 
@@ -102,16 +94,10 @@ router.get('/getSignupUsers', (req, res) => {
   callP(sql, res);
 })
 
-router.get('/getClassById', (req, res) => {
+router.get('/getClassById', auth, (req, res) => {
   let { c_id } = req.query;
   let sql = `select * from classes where c_id =${c_id}`;
   callP(sql, res);
-})
-
-router.get('/getBlackTime', (req, res) => {
-  let { u_id } = req.query;
-  let sql = `select * from def where u_id ="${u_id}"`;
-  callP(sql, res)
 })
 
 module.exports = router;
