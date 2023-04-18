@@ -20,6 +20,7 @@ const callP = async (sql, res) => {
     else
       res.status(200).json({ message: "请求成功", data: ret });
   })
+  return;
 }
 
 module.exports = { callP, conn };
